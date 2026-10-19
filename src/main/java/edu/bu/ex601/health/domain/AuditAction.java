@@ -1,0 +1,11 @@
+package edu.bu.ex601.health.domain;
+
+public enum AuditAction {
+    APPOINTMENT_BOOKED,
+    APPOINTMENT_REQUESTED_BY_PROXY,
+    APPOINTMENT_APPROVED,
+    APPOINTMENT_DECLINED,
+    NOTE_CREATED,
+    NOTE_FINALIZED,
+    NOTE_AMENDED
+}
