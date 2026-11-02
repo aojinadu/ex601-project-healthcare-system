@@ -47,11 +47,16 @@ public class RecordVisitNoteController {
     /** Returns validation errors; an empty list means the note is now final. */
     public List<String> finalizeNote(UUID noteId, UUID clinicianId) {
         VisitNote note = note(noteId);
+        Clinician clinician = clinician(clinicianId);
+        // A2 defect D2: authorize before validating, so a non-conducting clinician learns nothing
+        if (!note.getAppointment().isConductedBy(clinician)) {
+            throw new DomainException("Only the conducting clinician may change this note");
+        }
         List<String> errors = note.validate();
         if (!errors.isEmpty()) {
             return errors;
         }
-        note.finalizeNote(clinician(clinicianId), clock.instant());
+        note.finalizeNote(clinician, clock.instant());
         notes.save(note);
         audit(clinicianId, noteId, AuditAction.NOTE_FINALIZED);
         return List.of();
